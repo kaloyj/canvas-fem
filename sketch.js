@@ -63,12 +63,13 @@ const sketch = () => {
   const animateGroup = (context, width) => {
     for (let ndx = 0; ndx < pathByIndex.length; ndx++) {
       const path = calcWaypoints(pathByIndex[ndx]);
-      context.strokeStyle = "white";
       context.save();
 
       let i = 1;
 
       function animate() {
+        context.strokeStyle = "#47FF0C";
+
         if (i < path.length - 1) {
           window.requestAnimationFrame(animate);
         }
@@ -80,12 +81,39 @@ const sketch = () => {
 
         context.moveTo(x1, y1);
         context.lineTo(x2, y2);
-        context.lineWidth = 0.0075 * width;
+        context.lineWidth = 0.0038 * width;
+        context.shadowColor = "#47FF0C";
+        context.shadowBlur = 0.01 * width;
         context.stroke();
+
         i++;
       }
 
+      let j = 1;
+      function erase() {
+        context.strokeStyle = "black";
+
+        if (j < path.length - 1) {
+          window.requestAnimationFrame(erase);
+        }
+
+        const [x2, y2] = path[j];
+        const [x1, y1] = path[j - 1];
+
+        context.beginPath();
+
+        context.moveTo(x1, y1);
+        context.lineTo(x2, y2);
+        context.lineWidth = 0.015 * width;
+        context.shadowColor = "black";
+        context.shadowBlur = 0.015 * width;
+        context.stroke();
+
+        j++;
+      }
+
       animate();
+      setTimeout(() => erase(), 6000);
     }
   };
 
